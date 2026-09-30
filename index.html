@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Het web is voor iedereen</title>
+    
+    <style>
+      :root {
+        --background: #fff;
+        --color: #000;
+        --link: #00e;
+        --visited: #551a8b;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --background: black;
+          --color: white;
+          --link: #aaf;
+          --visited: #caf;
+        }
+      }
+      
+      * {
+        box-sizing: border-box;
+        margin: 0;
+      }
+
+      body {
+        /* Font stack from https://modernfontstacks.com/ */
+        font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+        font-weight: 500;
+
+        color: var(--color);
+        background: var(--background);
+
+        height: 100vh;
+        display: grid;
+        gap: 1rem;
+        grid-template-rows: 1fr auto auto;
+        grid-template-areas:
+          'main'
+          'header'
+          'footer';
+      }
+
+      header, main, footer {
+        padding: 1rem;
+      }
+
+      header {
+        grid-area: header;
+        padding-bottom: 0;
+        border-top: 1px currentColor solid;
+        max-width: fit-content;
+      }
+
+      main {
+        grid-area: main;
+        container-type: inline-size;
+        
+        @media (height > 42rem) {
+          overflow: scroll;
+        }
+      }
+
+      footer {
+        grid-area: footer;
+        padding-top: 0;
+      }
+
+      h1 {
+        text-wrap: balance;
+        font-size: clamp(1.1rem, 6vw, 1.9em);
+        margin-bottom: .5em;
+      }
+
+      p {
+        max-width: 46ch;
+      }
+      p + p {
+        margin-top: .5rem;
+      }
+
+      a:link {
+        color: var(--link);
+      }
+      a:visited {
+        color: var(--visited);
+      }
+      a:hover, a:active,a:focus {
+        background: var(--color);
+        color: var(--background);
+      }
+
+      ol {
+        list-style-position: inside;
+
+        @container (width >  35ch) {
+          column-count: calc(100cqw / 35ch);
+        }
+      }
+      
+      li a {
+        line-height: 2em;
+      }
+
+      li.teacher::after {
+        content: '🍎' / 'docent';
+        font-size: .7em;
+        padding-inline-start: .5ch;
+      }
+    </style>
+
+    <script defer>
+    fetch('./webring.json')
+      .then((response) => response.json())
+      .then((sites) => document.querySelector('ol').insertAdjacentHTML('afterbegin', sites.reduce((acc, current) => acc + `<li class="${current.cohort}"><a href="${current.url}" title="door ${current.owner}" tabindex="1">${current.name}</a></li>`,'')))
+    </script>
+
+</head>
+<body>
+    <header>
+        <h1>Digitaaltuintje</h1>
+        <p>Het is een webring voor met de hand gemaakte websites van studenten van de Bachelor Communication & Multimedia Design aan de Hogeschool van Amsterdam.</p>
+        <p>Voeg jouw site toe met een <a href="https://codeberg.org/ju5tu5/ring">pull-request</a>.</p>
+    </header>
+
+    <main>
+      <!-- <ol> container voor <li> elementen die gegenereerd worden op basis van `./webring.json` -->
+      <ol></ol>
+    </main>
+
+    <footer>
+        <p><span style="display: inline-block; transform: rotate(180deg);" aria-hidden="true">&copy;</span> <a href="./LICENSE">Copyleft, all wrongs reversed</a></p></footer>
+    </footer>
+</body>
+</html>
